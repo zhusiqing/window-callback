@@ -2,9 +2,7 @@ import { defineConfig } from 'rollup'
 import typescript from '@rollup/plugin-typescript'
 import dts from 'rollup-plugin-dts'
 import nodeResolve from '@rollup/plugin-node-resolve'
-import pkg from './package.json'
 
-const name = pkg.name
 const input = './src/index.ts'
 
 export default defineConfig([
@@ -19,7 +17,7 @@ export default defineConfig([
       {
         format: 'umd',
         file: `dist/index.js`,
-        name: 'Drag'
+        name: 'WindowCallback'
       },
       {
         exports: "named",

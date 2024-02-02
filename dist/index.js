@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Drag = {}));
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.WindowCallback = {}));
 })(this, (function (exports) { 'use strict';
 
     /******************************************************************************
@@ -19,147 +19,122 @@
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
 
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
+    function __awaiter(thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    }
 
-    var Drag = /** @class */ (function () {
-        function Drag(el, options) {
-            this.mousePos = {
-                x: 0,
-                y: 0
-            };
-            this.elPos = {
-                x: 0,
-                y: 0
-            };
-            this.startTime = Date.now();
-            this.isMoving = false;
-            this.isClick = false;
-            this.cacheListeners = {
-                mousedown: function () { },
-                mousemove: function () { },
-                mouseup: function () { },
-                click: function () { }
-            };
-            this.el = el;
-            this.options = __assign({ top: el.offsetTop + 'px', left: el.offsetLeft + 'px', zIndex: 99, onClick: function () { } }, options);
-            this.defaultOptions = __assign({}, this.options);
-            this.init();
+    function __generator(thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
         }
-        Drag.prototype.init = function () {
-            if (!this.el) {
-                return new Error("el is null");
-            }
-            this.setStyle();
-            this.addListeners();
-        };
-        Drag.prototype.setStyle = function () {
-            if (+this.options.top < 0) {
-                this.options.top = '0px';
-            }
-            if (+this.options.left < 0) {
-                this.options.left = '0px';
-            }
-            var oldStyle = this.el.getAttribute('style');
-            var constantStyle = 'position:fixed;cursor:pointer;user-select:none;';
-            var computedStyle = "top:".concat(this.options.top, ";left:").concat(this.options.left, ";z-index:").concat(this.options.zIndex, ";");
-            this.el.setAttribute('style', "".concat(oldStyle).concat(constantStyle).concat(computedStyle));
-        };
-        Drag.prototype.addListeners = function () {
-            this.cacheListeners = {
-                mousedown: this.handleMousedown.bind(this),
-                mousemove: this.handleMousemove.bind(this),
-                mouseup: this.handelMouseup.bind(this),
-                click: this.handleClick.bind(this)
-            };
-            this.el.addEventListener('mousedown', this.cacheListeners.mousedown);
-            document.addEventListener('mousemove', this.cacheListeners.mousemove);
-            this.el.addEventListener('mouseup', this.cacheListeners.mouseup);
-            this.el.addEventListener('click', this.cacheListeners.click);
-        };
-        Drag.prototype.handleMousedown = function (e) {
-            e.preventDefault();
-            // 左键为1，右键为2
-            if (e.buttons !== 1)
-                return;
-            this.mousePos.x = e.clientX;
-            this.mousePos.y = e.clientY;
-            this.elPos.x = this.el.offsetLeft;
-            this.elPos.y = this.el.offsetTop;
-            this.isMoving = true;
-            this.startTime = Date.now();
-        };
-        Drag.prototype.handleMousemove = function (e) {
-            if (!this.isMoving)
-                return;
-            var moveX = e.clientX - (this.mousePos.x - this.elPos.x);
-            var moveY = e.clientY - (this.mousePos.y - this.elPos.y);
-            if (moveX < 0) {
-                this.options.left = '0px';
-            }
-            else if (moveX > window.innerWidth - this.el.offsetWidth) {
-                this.options.left = window.innerWidth - this.el.offsetWidth + 'px';
-            }
-            else {
-                this.options.left = moveX + 'px';
-            }
-            if (moveY < 0) {
-                this.options.top = '0px';
-            }
-            else if (moveY > window.innerHeight - this.el.offsetHeight) {
-                this.options.top = window.innerHeight - this.el.offsetHeight + 'px';
-            }
-            else {
-                this.options.top = moveY + 'px';
-            }
-            this.setStyle();
-        };
-        Drag.prototype.handelMouseup = function () {
-            this.isMoving = false;
-            this.isClick = Date.now() - this.startTime < 200;
-        };
-        Drag.prototype.handleClick = function (e) {
-            if (!this.isClick)
-                return;
-            this.options.onClick.call(this.el, e);
-        };
-        Drag.prototype.clearListeners = function () {
-            this.el.removeEventListener('mousedown', this.cacheListeners.mousedown);
-            document.removeEventListener('mousemove', this.cacheListeners.mousemove);
-            this.el.removeEventListener('mouseup', this.cacheListeners.mouseup);
-            this.el.removeEventListener('click', this.cacheListeners.click);
-            this.cacheListeners = {
-                mousedown: function () { },
-                mousemove: function () { },
-                mouseup: function () { },
-                click: function () { }
-            };
-        };
-        Drag.prototype.reset = function () {
-            this.options = __assign({}, this.defaultOptions);
-            this.clearListeners();
-            this.setStyle();
-            this.addListeners();
-        };
-        Drag.prototype.register = function () {
-            this.addListeners();
-        };
-        Drag.prototype.destroy = function () {
-            this.clearListeners();
-        };
-        return Drag;
-    }());
+    }
 
-    exports.Drag = Drag;
-    exports["default"] = Drag;
+    var CallbackManager = /** @class */ (function () {
+        function CallbackManager() {
+            this.methods = new Map();
+            this.methods.clear();
+        }
+        /**
+         * 执行自定义事件
+         */
+        CallbackManager.prototype._dispatchEvent = function (type) {
+            var _a;
+            var params = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                params[_i - 1] = arguments[_i];
+            }
+            if (this.methods.has(type)) {
+                (_a = this.methods.get(type)) === null || _a === void 0 ? void 0 : _a.forEach(function (handler) {
+                    handler.apply(void 0, params);
+                });
+            }
+        };
+        /**
+         * 在window上注册事件监听
+         * @param type 事件类型
+         * @param extraHandler 自定义window处理函数
+         */
+        CallbackManager.prototype.register = function (type, extraHandler) {
+            var _this = this;
+            var handler = function (data) { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    this._dispatchEvent(type, data);
+                    return [2 /*return*/];
+                });
+            }); };
+            if (extraHandler) {
+                extraHandler(this._dispatchEvent);
+            }
+            else {
+                if (window) {
+                    window[type] = handler;
+                }
+            }
+        };
+        CallbackManager.prototype.add = function (type, handler) {
+            var _a;
+            if (!this.methods.has(type)) {
+                this.methods.set(type, new Set([handler]));
+                this.register(type);
+            }
+            else {
+                (_a = this.methods.get(type)) === null || _a === void 0 ? void 0 : _a.add(handler);
+            }
+        };
+        /**
+         * 删除自定义事件
+         * @param {String} type 事件类型
+         * @param {Function} handler 回调函数
+         */
+        CallbackManager.prototype.remove = function (type, handler) {
+            var _a;
+            if (this.methods.has(type)) {
+                (_a = this.methods.get(type)) === null || _a === void 0 ? void 0 : _a.delete(handler);
+            }
+        };
+        /**
+         * 清空注册的对应事件下回调函数
+         */
+        CallbackManager.prototype.clear = function (type) {
+            if (this.methods.has(type)) {
+                this.methods.delete(type);
+            }
+        };
+        return CallbackManager;
+    }());
+    var callbackManager = new CallbackManager();
+
+    exports.CallbackManager = CallbackManager;
+    exports.callbackManager = callbackManager;
+    exports["default"] = CallbackManager;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

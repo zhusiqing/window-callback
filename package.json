@@ -1,7 +1,7 @@
 {
-  "name": "drag-utils-simple",
-  "version": "1.0.3",
-  "description": "让元素支持拖拽移动",
+  "name": "window-callback",
+  "version": "1.0.0",
+  "description": "注册window上的函数",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -18,20 +18,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zhusiqing/drag.git"
+    "url": "git+https://github.com/zhusiqing/window-callback.git"
   },
   "keywords": [
-    "drag",
-    "move",
-    "element",
-    "dom"
+    "window",
+    "callback",
+    "function",
+    "event"
   ],
   "author": "zhusiqing",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zhusiqing/drag/issues"
+    "url": "https://github.com/zhusiqing/window-callback/issues"
   },
-  "homepage": "https://github.com/zhusiqing/drag#readme",
+  "homepage": "https://github.com/zhusiqing/window-callback#readme",
   "devDependencies": {
     "@babel/preset-typescript": "^7.17.12",
     "@rollup/plugin-node-resolve": "^13.3.0",

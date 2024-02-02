@@ -1,37 +1,39 @@
-interface OptionsType {
-    top?: string;
-    left?: string;
-    zIndex?: number;
-    onClick?: Function;
+declare type SyncHandlerType = Function;
+declare type AsyncHandlerType = <T>(...args: T[]) => Promise<any>;
+declare type HandlerType = SyncHandlerType;
+declare type DispatchEventType = (type: string, ...params: any[]) => void;
+declare class CallbackManager {
+    private methods;
+    constructor();
+    /**
+     * 执行自定义事件
+     */
+    private _dispatchEvent;
+    /**
+     * 在window上注册事件监听
+     * @param type 事件类型
+     * @param extraHandler 自定义window处理函数
+     */
+    register(type: string, extraHandler?: (dispatchEvent: DispatchEventType) => void): void;
+    /**
+     * 添加自定义事件
+     * @param {string} type 事件类型
+     * @param {Function} handler 回调函数
+     * @param {Function} [extraHandler] 额外处理函数
+     */
+    add(type: string, handler: SyncHandlerType): void;
+    add(type: string, handler: AsyncHandlerType): void;
+    /**
+     * 删除自定义事件
+     * @param {String} type 事件类型
+     * @param {Function} handler 回调函数
+     */
+    remove(type: string, handler: HandlerType): void;
+    /**
+     * 清空注册的对应事件下回调函数
+     */
+    clear(type: string): void;
 }
-interface ListenersType {
-    mousedown: any;
-    mousemove: any;
-    mouseup: any;
-    click: any;
-}
-declare class Drag {
-    el: HTMLElement;
-    options: Required<OptionsType>;
-    private defaultOptions;
-    private mousePos;
-    private elPos;
-    private startTime;
-    private isMoving;
-    private isClick;
-    private cacheListeners;
-    constructor(el: HTMLElement, options: OptionsType);
-    private init;
-    private setStyle;
-    private addListeners;
-    private handleMousedown;
-    private handleMousemove;
-    private handelMouseup;
-    private handleClick;
-    private clearListeners;
-    reset(): void;
-    register(): void;
-    destroy(): void;
-}
+declare const callbackManager: CallbackManager;
 
-export { Drag, ListenersType, OptionsType, Drag as default };
+export { AsyncHandlerType, CallbackManager, DispatchEventType, HandlerType, SyncHandlerType, callbackManager, CallbackManager as default };
